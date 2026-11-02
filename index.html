@@ -40,11 +40,23 @@
   const CHECKOUT_URL = "https://pay.kiwify.com.br/86PUbAt";
 </script>
 
-<!-- ============================================================
-     COLAR PIXEL DO META AQUI
-     (código base do Pixel do Gerenciador de Eventos, com o PageView).
-     O clique nos botões já dispara fbq('track','InitiateCheckout') se o Pixel existir.
-     ============================================================ -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '40971381535794215');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=40971381535794215&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -501,8 +513,16 @@
   if(external&&qs){url+=(url.indexOf('?')>-1?'&':'?')+qs;}
   document.querySelectorAll('.js-cta').forEach(function(a){
     a.href=url;
-    a.addEventListener('click',function(){
+    a.addEventListener('click',function(e){
       if(window.fbq){fbq('track','InitiateCheckout',{value:37,currency:'BRL',content_name:'Filhote Educado em 21 Dias'});}
+      if(!window.fbq||!external||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target==='_blank')return;
+      e.preventDefault();
+      var dest=a.href;
+      if(typeof fbq.callMethod!=='function'){
+        if(fbq.queue&&fbq.queue.length)fbq.queue.pop();
+        (new Image()).src='https://www.facebook.com/tr?id=40971381535794215&ev=InitiateCheckout&cd[value]=37&cd[currency]=BRL&cd[content_name]='+encodeURIComponent('Filhote Educado em 21 Dias')+'&dl='+encodeURIComponent(location.href);
+      }
+      window.setTimeout(function(){window.location.href=dest;},300);
     });
   });
   // Barra fixa: aparece depois do topo e some quando a caixa de preço ou o rodapé estão na tela
