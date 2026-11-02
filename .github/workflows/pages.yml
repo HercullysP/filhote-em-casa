@@ -30,6 +30,12 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # site/ is the Cloudflare Pages source, versioned here only.
+      # Drop it before upload so Pages keeps serving the root redirects
+      # and does not publish a second copy of the sales page.
+      - name: Exclude vendored site from Pages artifact
+        run: rm -rf site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
